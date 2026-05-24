@@ -12,14 +12,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         // Redireciona chamadas do Feign para o ProdutoService mockado (WireMock)
-        "spring.cloud.openfeign.client.config.produtoService.url=http://localhost:8098",
+        "produto-service.url=http://localhost:8098",
         "spring.artemis.embedded.enabled=true"
 })
 @DisplayName("EstoqueService — Testes de Integração (H2 + WireMock + Artemis)")
@@ -71,7 +71,7 @@ class EstoqueIntegrationTest {
                 }
                 """;
 
-        mockMvc.perform(post("/estoque/movimentacoes")
+        mockMvc.perform(MockMvcRequestBuilders.post("/estoque/movimentacoes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isCreated())
@@ -94,7 +94,7 @@ class EstoqueIntegrationTest {
                 }
                 """;
 
-        mockMvc.perform(post("/estoque/movimentacoes")
+        mockMvc.perform(MockMvcRequestBuilders.post("/estoque/movimentacoes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isNotFound())

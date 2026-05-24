@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * para ambiente de desenvolvimento sem Service Discovery (Eureka),
  * apontamos diretamente para a porta do Produto Service.
  */
-@FeignClient(name = "produto-service", url = "http://localhost:8081/produtos")
+@FeignClient(name = "produto-service", url = "${produto-service.url:http://localhost:8081/produtos}")
 public interface ProdutoClient {
 
     /**

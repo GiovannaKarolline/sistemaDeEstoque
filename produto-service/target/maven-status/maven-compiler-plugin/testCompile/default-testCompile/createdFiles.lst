@@ -1,0 +1,3 @@
+br\edu\inventory\produto\ProdutoIntegrationTest.class
+br\edu\inventory\produto\controller\ProdutoControllerTest.class
+br\edu\inventory\produto\service\ProdutoServiceTest.class

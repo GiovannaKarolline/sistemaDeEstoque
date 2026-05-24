@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -88,7 +88,7 @@ class ProdutoIntegrationTest {
                 }
                 """;
 
-        String respCriacao = mockMvc.perform(post("/produtos")
+        String respCriacao = mockMvc.perform(MockMvcRequestBuilders.post("/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(produtoJson))
                 .andExpect(status().isCreated())
@@ -102,7 +102,7 @@ class ProdutoIntegrationTest {
                 .readTree(respCriacao).get("id").asLong();
 
         // 3. Buscar produto por ID — deve incluir preço em USD (5250 / 5.25 = 1000)
-        mockMvc.perform(get("/produtos/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/produtos/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.precoBrl").value(5250.00))
                 .andExpect(jsonPath("$.taxaCambio").value(5.25))
@@ -117,7 +117,7 @@ class ProdutoIntegrationTest {
                 { "nome": "Cadeira Gamer", "sku": "CAD-001", "precoBrl": 1200.00 }
                 """;
 
-        String respCriacao = mockMvc.perform(post("/produtos")
+        String respCriacao = mockMvc.perform(MockMvcRequestBuilders.post("/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(produtoJson))
                 .andExpect(status().isCreated())
@@ -131,7 +131,7 @@ class ProdutoIntegrationTest {
                 .willReturn(aResponse().withStatus(503)));
 
         // 3. Buscar produto — precoUsd deve ser null (circuit breaker / fallback)
-        mockMvc.perform(get("/produtos/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/produtos/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.precoBrl").value(1200.00))
                 .andExpect(jsonPath("$.precoUsd").isEmpty());

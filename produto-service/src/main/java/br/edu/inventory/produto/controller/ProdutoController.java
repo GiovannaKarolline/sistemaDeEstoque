@@ -50,7 +50,7 @@ public class ProdutoController {
     @ApiResponse(responseCode = "200", description = "Produto encontrado")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     public ResponseEntity<ProdutoResponseDTO> buscarPorId(
-            @Parameter(description = "ID do produto") @PathVariable Long id) {
+            @Parameter(description = "ID do produto") @PathVariable("id") Long id) {
         return ResponseEntity.ok(produtoService.buscarPorId(id));
     }
 
@@ -69,7 +69,7 @@ public class ProdutoController {
     @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     public ResponseEntity<ProdutoResponseDTO> atualizar(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody ProdutoRequestDTO dto) {
         return ResponseEntity.ok(produtoService.atualizar(id, dto));
     }
@@ -78,7 +78,7 @@ public class ProdutoController {
     @Operation(summary = "Remover produto")
     @ApiResponse(responseCode = "204", description = "Produto removido com sucesso")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
     }

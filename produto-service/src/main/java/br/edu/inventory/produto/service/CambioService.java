@@ -26,8 +26,9 @@ import java.math.BigDecimal;
 public class CambioService {
 
     private static final String CIRCUIT_BREAKER_NAME = "awesomeApi";
-    private static final String AWESOME_API_URL =
-            "https://economia.awesomeapi.com.br/json/last/USD-BRL";
+
+    @org.springframework.beans.factory.annotation.Value("${awesome-api.base-url:https://economia.awesomeapi.com.br}")
+    private String awesomeApiBaseUrl;
 
     private final WebClient webClient;
 
@@ -42,7 +43,7 @@ public class CambioService {
 
         AwesomeApiResponseDTO response = webClient
                 .get()
-                .uri(AWESOME_API_URL)
+                .uri(awesomeApiBaseUrl + "/json/last/USD-BRL")
                 .retrieve()
                 .bodyToMono(AwesomeApiResponseDTO.class)
                 .block();

@@ -38,7 +38,7 @@ public class MovimentacaoController {
     @Operation(summary = "Listar histórico de movimentações de um produto")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    public ResponseEntity<List<MovimentacaoResponseDTO>> listar(@PathVariable Long produtoId) {
+    public ResponseEntity<List<MovimentacaoResponseDTO>> listar(@PathVariable("produtoId") Long produtoId) {
         return ResponseEntity.ok(estoqueService.listarMovimentacoes(produtoId));
     }
 
@@ -46,7 +46,7 @@ public class MovimentacaoController {
     @Operation(summary = "Consultar saldo atual de um produto")
     @ApiResponse(responseCode = "200", description = "Sucesso")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    public ResponseEntity<SaldoResponseDTO> consultarSaldo(@PathVariable Long produtoId) {
+    public ResponseEntity<SaldoResponseDTO> consultarSaldo(@PathVariable("produtoId") Long produtoId) {
         return ResponseEntity.ok(estoqueService.consultarSaldo(produtoId));
     }
 }

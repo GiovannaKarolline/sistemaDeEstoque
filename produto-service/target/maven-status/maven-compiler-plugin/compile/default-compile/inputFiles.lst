@@ -1,0 +1,14 @@
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\config\OpenApiConfig.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\config\WebClientConfig.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\controller\ProdutoController.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\dto\AwesomeApiResponseDTO.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\dto\ProdutoRequestDTO.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\dto\ProdutoResponseDTO.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\exception\GlobalExceptionHandler.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\exception\ProdutoNotFoundException.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\exception\SkuDuplicadoException.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\model\Produto.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\ProdutoApplication.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\repository\ProdutoRepository.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\service\CambioService.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\produto-service\src\main\java\br\edu\inventory\produto\service\ProdutoService.java

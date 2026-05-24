@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # Princípio Martin Fowler: roteamento declarativo por capacidade de negócio
+      routes:
+        - id: produto-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/produtos/**
+          filters:
+            - StripPrefix=0
+
+        - id: estoque-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/estoque/**
+          filters:
+            - StripPrefix=0
+
+        - id: notificacao-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/notificacoes/**
+          filters:
+            - StripPrefix=0
+
+# Princípio Susan Fowler: monitoramento e health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

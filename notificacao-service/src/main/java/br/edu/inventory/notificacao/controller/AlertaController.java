@@ -29,7 +29,7 @@ public class AlertaController {
 
     @GetMapping("/alertas/{produtoId}")
     @Operation(summary = "Listar alertas por produto")
-    public ResponseEntity<List<Alerta>> listarPorProduto(@PathVariable Long produtoId) {
+    public ResponseEntity<List<Alerta>> listarPorProduto(@PathVariable("produtoId") Long produtoId) {
         return ResponseEntity.ok(alertaService.listarPorProduto(produtoId));
     }
 }
