@@ -74,9 +74,11 @@ O serviço possui uma regra de proteção (conhecida como Circuit Breaker) na in
 Nome e descrição dos eventos: O Produto Service não faz publicação nem consumo de eventos de mensageria. A sua comunicação ocorre integralmente através de chamadas síncronas HTTP.
 
 9. Métricas Monitoradas
+
 Exemplos de indicadores relevantes:
 Quantidade e tempo médio de resposta das chamadas recebidas pelos endpoints da API, o que ajuda a identificar problemas de lentidão.
 Monitoramento do estado de comunicação com a API de câmbio externa, permitindo saber se a conexão com o fornecedor terceirizado está falhando com frequência.
 
 10. ADR Relacionado
+
 Decisão arquitetural associada ao serviço: O Produto Service foi isolado com sua própria estrutura de banco de dados, de forma independente do Estoque Service. Essa decisão foi documentada para garantir que qualquer necessidade de consultar os dados de produtos precise ocorrer exclusivamente via rede, garantindo que o banco de dados não seja compartilhado indevidamente entre diferentes microsserviços.
