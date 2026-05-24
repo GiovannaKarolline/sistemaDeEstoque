@@ -5,6 +5,7 @@ Nome do microsserviço: Produto Service
 Objetivo e responsabilidades principais: O Produto Service tem o objetivo de gerenciar o catálogo de produtos do sistema de estoque. Sua responsabilidade principal é manter o cadastro dos itens atualizado e ser a fonte oficial de informações. Além disso, ele é responsável por apresentar o preço internacional dos produtos, convertendo o valor original de Reais para Dólares através de uma integração em tempo real com uma API de câmbio.
 
 2. Endpoints da API
+
 Método HTTP: GET
 URL: /produtos
 Descrição da operação: Retorna a lista de todos os produtos cadastrados no banco de dados, contendo informações básicas e sem realizar a conversão de moedas, a fim de garantir maior velocidade na resposta.
@@ -26,6 +27,7 @@ URL: /produtos/{id}
 Descrição da operação: Exclui permanentemente o cadastro de um produto específico do banco de dados.
 
 3. Exemplo de Requisição e Resposta
+
 Abaixo está o exemplo de como funciona a criação de um novo produto através do endpoint POST /produtos.
 
 Exemplo em JSON de entrada (Requisição):
@@ -50,12 +52,14 @@ Exemplo em JSON de saída (Resposta):
 }
 
 4. Dependências Externas
+
 Outros microsserviços consumidos: Este serviço atua na base da arquitetura e não consome nenhum outro microsserviço interno.
 Banco de dados: Utiliza o banco de dados relacional H2, rodando em memória e gerenciado pelo framework Spring Data JPA.
 Fila ou broker de mensagens: Não se aplica. O Produto Service não utiliza filas ou mensageria em sua arquitetura atual.
 APIs externas: Consome a API pública AwesomeAPI (economia.awesomeapi.com.br) para consultar a taxa de câmbio mais recente e converter o preço de BRL para USD.
 
 5. Responsável pelo Serviço
+
 Equipe ou pessoa responsável: Desenvolvido e mantido por Giovanna Karolline.
 
 6. Procedimentos Básicos de Operação
@@ -65,12 +69,14 @@ Endpoint de health check: Para checar se a aplicação está de pé e saudável,
 Como reiniciar o serviço: No terminal em que a aplicação estiver rodando, pressione as teclas Ctrl e C simultaneamente para parar a execução. Após o encerramento ser concluído, digite novamente o comando de inicialização local.
 
 7. Regras de Negócio
+
 Principais validações e comportamentos do serviço:
 O sistema valida automaticamente se os dados enviados para criação estão preenchidos corretamente, bloqueando o cadastro de itens com preço negativo ou com campos obrigatórios vazios.
 O código identificador do produto, chamado de SKU, deve ser exclusivo. O sistema impede o cadastro de dois itens diferentes compartilhando o mesmo código.
 O serviço possui uma regra de proteção (conhecida como Circuit Breaker) na integração com a API de câmbio externa. Se a AwesomeAPI sair do ar, o serviço de produtos não trava. Ele continua operando normalmente, mas passa a retornar o preço em dólar como nulo de forma controlada.
 
 8. Eventos Publicados ou Consumidos
+
 Nome e descrição dos eventos: O Produto Service não faz publicação nem consumo de eventos de mensageria. A sua comunicação ocorre integralmente através de chamadas síncronas HTTP.
 
 9. Métricas Monitoradas
