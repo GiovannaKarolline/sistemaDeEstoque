@@ -84,7 +84,7 @@ public class EstoqueService {
 
         Movimentacao salva = movimentacaoRepository.save(movimentacao);
         
-        Integer novoSaldo = calcularSaldoInterno(dto.getProdutoId()); // Recalcula após salvar
+        Integer novoSaldo = calcularSaldoInterno(dto.getProdutoId()); // Recalcula
         log.info("Novo saldo do produto {}: {}", dto.getProdutoId(), novoSaldo);
 
         if (novoSaldo < LIMITE_ESTOQUE_BAIXO) {
@@ -99,7 +99,7 @@ public class EstoqueService {
         return toResponseDTO(salva);
     }
 
-    // --- Métodos Auxiliares ---
+    // Auxiliares
 
     private Integer calcularSaldoInterno(Long produtoId) {
         Integer totalEntradas = movimentacaoRepository.sumEntradasByProdutoId(produtoId);

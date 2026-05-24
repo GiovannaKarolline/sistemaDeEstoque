@@ -62,48 +62,48 @@ class ProdutoServiceTest {
     @Test
     @DisplayName("listarTodos() deve retornar lista de produtos")
     void listarTodos_deveRetornarLista() {
-        // Arrange
+        // Prepara
         when(produtoRepository.findAll()).thenReturn(List.of(produtoExemplo));
 
-        // Act
+        // Executa
         List<ProdutoResponseDTO> resultado = produtoService.listarTodos();
 
-        // Assert
+        // Valida
         assertThat(resultado).hasSize(1);
         assertThat(resultado.get(0).getNome()).isEqualTo("Teclado Mecânico");
         assertThat(resultado.get(0).getSku()).isEqualTo("TEC-001");
         verify(produtoRepository).findAll();
-        // listarTodos() NÃO deve chamar a API de câmbio (performance)
+        // Nao chama API
         verifyNoInteractions(cambioService);
     }
 
     @Test
     @DisplayName("buscarPorId() deve retornar produto com preço USD quando API está disponível")
     void buscarPorId_comApiDisponivel_deveRetornarComPrecoUsd() {
-        // Arrange
+        // Prepara
         when(produtoRepository.findById(1L)).thenReturn(Optional.of(produtoExemplo));
         when(cambioService.buscarTaxaCambioUsdBrl()).thenReturn(new BigDecimal("5.00"));
 
-        // Act
+        // Executa
         ProdutoResponseDTO resultado = produtoService.buscarPorId(1L);
 
-        // Assert
+        // Valida
         assertThat(resultado.getPrecoBrl()).isEqualByComparingTo("450.00");
-        assertThat(resultado.getPrecoUsd()).isEqualByComparingTo("90.0000"); // 450 / 5 = 90
+        assertThat(resultado.getPrecoUsd()).isEqualByComparingTo("90.0000"); // Divisao
         assertThat(resultado.getTaxaCambio()).isEqualByComparingTo("5.00");
     }
 
     @Test
     @DisplayName("buscarPorId() deve retornar produto sem preço USD quando API (circuit breaker) retorna null")
     void buscarPorId_comCircuitBreakerAtivo_deveRetornarSemPrecoUsd() {
-        // Arrange
+        // Prepara
         when(produtoRepository.findById(1L)).thenReturn(Optional.of(produtoExemplo));
         when(cambioService.buscarTaxaCambioUsdBrl()).thenReturn(null);
 
-        // Act
+        // Executa
         ProdutoResponseDTO resultado = produtoService.buscarPorId(1L);
 
-        // Assert
+        // Valida
         assertThat(resultado.getPrecoBrl()).isEqualByComparingTo("450.00");
         assertThat(resultado.getPrecoUsd()).isNull();
         assertThat(resultado.getTaxaCambio()).isNull();
@@ -112,10 +112,10 @@ class ProdutoServiceTest {
     @Test
     @DisplayName("buscarPorId() deve lançar ProdutoNotFoundException quando produto não existe")
     void buscarPorId_produtoInexistente_deveLancarException() {
-        // Arrange
+        // Prepara
         when(produtoRepository.findById(99L)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // Executa e valida
         assertThatThrownBy(() -> produtoService.buscarPorId(99L))
                 .isInstanceOf(ProdutoNotFoundException.class)
                 .hasMessageContaining("99");
@@ -124,7 +124,7 @@ class ProdutoServiceTest {
     @Test
     @DisplayName("criar() deve salvar e retornar produto quando dados são válidos")
     void criar_dadosValidos_deveSalvarERretornar() {
-        // Arrange
+        // Prepara
         ProdutoRequestDTO dto = ProdutoRequestDTO.builder()
                 .nome("Mouse Gamer")
                 .sku("MOU-001")
@@ -143,10 +143,10 @@ class ProdutoServiceTest {
         when(produtoRepository.existsBySku("MOU-001")).thenReturn(false);
         when(produtoRepository.save(any(Produto.class))).thenReturn(salvo);
 
-        // Act
+        // Executa
         ProdutoResponseDTO resultado = produtoService.criar(dto);
 
-        // Assert
+        // Valida
         assertThat(resultado.getId()).isEqualTo(2L);
         assertThat(resultado.getNome()).isEqualTo("Mouse Gamer");
         verify(produtoRepository).save(any(Produto.class));
@@ -155,7 +155,7 @@ class ProdutoServiceTest {
     @Test
     @DisplayName("criar() deve lançar SkuDuplicadoException quando SKU já existe")
     void criar_skuDuplicado_deveLancarException() {
-        // Arrange
+        // Prepara
         ProdutoRequestDTO dto = ProdutoRequestDTO.builder()
                 .nome("Produto Duplicado")
                 .sku("TEC-001")
@@ -164,7 +164,7 @@ class ProdutoServiceTest {
 
         when(produtoRepository.existsBySku("TEC-001")).thenReturn(true);
 
-        // Act & Assert
+        // Executa e valida
         assertThatThrownBy(() -> produtoService.criar(dto))
                 .isInstanceOf(SkuDuplicadoException.class)
                 .hasMessageContaining("TEC-001");
@@ -175,23 +175,23 @@ class ProdutoServiceTest {
     @Test
     @DisplayName("deletar() deve remover produto existente")
     void deletar_produtoExistente_deveRemover() {
-        // Arrange
+        // Prepara
         when(produtoRepository.existsById(1L)).thenReturn(true);
 
-        // Act
+        // Executa
         produtoService.deletar(1L);
 
-        // Assert
+        // Valida
         verify(produtoRepository).deleteById(1L);
     }
 
     @Test
     @DisplayName("deletar() deve lançar exception para produto inexistente")
     void deletar_produtoInexistente_deveLancarException() {
-        // Arrange
+        // Prepara
         when(produtoRepository.existsById(99L)).thenReturn(false);
 
-        // Act & Assert
+        // Executa e valida
         assertThatThrownBy(() -> produtoService.deletar(99L))
                 .isInstanceOf(ProdutoNotFoundException.class);
 

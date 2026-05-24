@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
                         "Erro interno: " + ex.getMessage()));
     }
 
-    // DTO de resposta de erro
+    // Erro DTO
     @Getter
     @RequiredArgsConstructor
     public static class ErroResponse {

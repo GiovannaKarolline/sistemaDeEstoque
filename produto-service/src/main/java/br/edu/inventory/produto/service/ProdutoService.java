@@ -54,7 +54,7 @@ public class ProdutoService {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ProdutoNotFoundException(id));
 
-        // Consulta API externa para conversão de câmbio
+        // Consulta cambio
         BigDecimal taxaCambio = cambioService.buscarTaxaCambioUsdBrl();
         BigDecimal precoUsd = calcularPrecoUsd(produto.getPrecoBrl(), taxaCambio);
 
@@ -119,7 +119,7 @@ public class ProdutoService {
         produtoRepository.deleteById(id);
     }
 
-    // ──────────────────────────── helpers ────────────────────────────
+    // Helpers
 
     private BigDecimal calcularPrecoUsd(BigDecimal precoBrl, BigDecimal taxaCambio) {
         if (taxaCambio == null || taxaCambio.compareTo(BigDecimal.ZERO) == 0) {

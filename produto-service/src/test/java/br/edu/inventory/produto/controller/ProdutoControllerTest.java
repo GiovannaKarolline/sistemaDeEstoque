@@ -131,7 +131,7 @@ class ProdutoControllerTest {
         ProdutoRequestDTO request = ProdutoRequestDTO.builder()
                 .sku("MOU-001")
                 .precoBrl(new BigDecimal("200.00"))
-                .build(); // nome ausente — violação de @NotBlank
+                .build(); // Sem nome
 
         mockMvc.perform(post("/produtos")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-        // Redireciona chamadas do Feign para o ProdutoService mockado (WireMock)
+        // Mock
         "produto-service.url=http://localhost:8098",
         "spring.artemis.embedded.enabled=true"
 })
@@ -50,7 +50,7 @@ class EstoqueIntegrationTest {
     @Test
     @DisplayName("POST /estoque/movimentacoes deve verificar Produto via Feign e registrar entrada")
     void registrarEntrada_comProdutoExistente_deveRetornar201() throws Exception {
-        // Mock do Produto Service retornando 200 OK (Produto Existe)
+        // Mock 200
         stubFor(get(urlEqualTo("/1"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -82,7 +82,7 @@ class EstoqueIntegrationTest {
     @Test
     @DisplayName("POST /estoque/movimentacoes deve retornar 404 se Produto Service retornar 404")
     void registrarMovimentacao_produtoInexistente_deveRetornar404() throws Exception {
-        // Mock do Produto Service retornando 404
+        // Mock 404
         stubFor(get(urlEqualTo("/99"))
                 .willReturn(aResponse().withStatus(404)));
 

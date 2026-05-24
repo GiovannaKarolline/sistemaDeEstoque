@@ -20,7 +20,7 @@ public class ArtemisConfig implements ArtemisConfigurationCustomizer {
     @Override
     public void customize(Configuration configuration) {
         try {
-            // Permite conexões externas na porta padrão do Artemis/ActiveMQ
+            // Permite conexoes externas
             configuration.addAcceptorConfiguration("tcp", "tcp://0.0.0.0:61616");
         } catch (Exception e) {
             throw new RuntimeException("Falha ao configurar broker Artemis", e);

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-        // Redireciona chamadas da AwesomeAPI para o WireMock local
+        // Mock API
         "awesome-api.base-url=http://localhost:8099"
 })
 @DisplayName("ProdutoService — Testes de Integração (H2 + WireMock)")
@@ -59,7 +59,7 @@ class ProdutoIntegrationTest {
     @Test
     @DisplayName("POST /produtos + GET /produtos/{id} — fluxo completo com WireMock da AwesomeAPI")
     void fluxoCompletoCriacaoEConsulta() throws Exception {
-        // 1. Mockar AwesomeAPI para retornar cotação USD-BRL = 5.25
+        // Mock cambio
         stubFor(get(urlEqualTo("/json/last/USD-BRL"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -78,7 +78,7 @@ class ProdutoIntegrationTest {
                                 }
                                 """)));
 
-        // 2. Criar produto via POST
+        // Cria post
         String produtoJson = """
                 {
                     "nome": "Notebook Gamer",
@@ -97,11 +97,11 @@ class ProdutoIntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        // Extrair ID criado
+        // Pega id
         Long id = com.fasterxml.jackson.databind.json.JsonMapper.builder().build()
                 .readTree(respCriacao).get("id").asLong();
 
-        // 3. Buscar produto por ID — deve incluir preço em USD (5250 / 5.25 = 1000)
+        // Busca com USD
         mockMvc.perform(MockMvcRequestBuilders.get("/produtos/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.precoBrl").value(5250.00))
@@ -112,7 +112,7 @@ class ProdutoIntegrationTest {
     @Test
     @DisplayName("GET /produtos/{id} deve retornar precoUsd=null quando AwesomeAPI retorna erro")
     void buscarPorId_apiExternaIndisponivel_precoUsdDeveSerNulo() throws Exception {
-        // 1. Criar produto primeiro
+        // Cria primeiro
         String produtoJson = """
                 { "nome": "Cadeira Gamer", "sku": "CAD-001", "precoBrl": 1200.00 }
                 """;
@@ -126,11 +126,11 @@ class ProdutoIntegrationTest {
         Long id = com.fasterxml.jackson.databind.json.JsonMapper.builder().build()
                 .readTree(respCriacao).get("id").asLong();
 
-        // 2. Simular AwesomeAPI com erro 503
+        // Erro 503
         stubFor(get(urlEqualTo("/json/last/USD-BRL"))
                 .willReturn(aResponse().withStatus(503)));
 
-        // 3. Buscar produto — precoUsd deve ser null (circuit breaker / fallback)
+        // Fallback nulo
         mockMvc.perform(MockMvcRequestBuilders.get("/produtos/" + id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.precoBrl").value(1200.00))

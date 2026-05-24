@@ -47,36 +47,36 @@ class EstoqueServiceTest {
     @Test
     @DisplayName("consultarSaldo() deve retornar o saldo correto baseado nas movimentações")
     void consultarSaldo_deveRetornarSaldoCorreto() {
-        // Arrange
+        // Prepara
         mockProdutoExistente(1L);
         when(movimentacaoRepository.sumEntradasByProdutoId(1L)).thenReturn(50);
         when(movimentacaoRepository.sumSaidasByProdutoId(1L)).thenReturn(20);
 
-        // Act
+        // Executa
         SaldoResponseDTO saldo = estoqueService.consultarSaldo(1L);
 
-        // Assert
+        // Valida
         assertThat(saldo.getProdutoId()).isEqualTo(1L);
-        assertThat(saldo.getSaldo()).isEqualTo(30); // 50 - 20
+        assertThat(saldo.getSaldo()).isEqualTo(30); // Subtrai
         verify(produtoClient).buscarProdutoPorId(1L);
     }
 
     @Test
     @DisplayName("registrarMovimentacao() de SAIDA deve falhar se o saldo for insuficiente")
     void registrarMovimentacao_saidaSemSaldo_deveLancarException() {
-        // Arrange
+        // Prepara
         mockProdutoExistente(1L);
         when(movimentacaoRepository.sumEntradasByProdutoId(1L)).thenReturn(10);
         when(movimentacaoRepository.sumSaidasByProdutoId(1L)).thenReturn(5);
-        // Saldo atual = 5
+        // Saldo 5
 
         MovimentacaoRequestDTO request = MovimentacaoRequestDTO.builder()
                 .produtoId(1L)
                 .tipo(TipoMovimentacao.SAIDA)
-                .quantidade(10) // Solicitando 10, tem 5
+                .quantidade(10) // Falta 5
                 .build();
 
-        // Act & Assert
+        // Executa e valida
         assertThatThrownBy(() -> estoqueService.registrarMovimentacao(request))
                 .isInstanceOf(EstoqueInsuficienteException.class)
                 .hasMessageContaining("Estoque insuficiente");
@@ -88,12 +88,12 @@ class EstoqueServiceTest {
     @Test
     @DisplayName("registrarMovimentacao() deve publicar evento se o novo saldo ficar < 10")
     void registrarMovimentacao_saldoFicouBaixo_devePublicarEvento() {
-        // Arrange
+        // Prepara
         mockProdutoExistente(1L);
         
-        // Antes de salvar (Para validar se pode sair): Saldo = 15
+        // Saldo inicial 15
         when(movimentacaoRepository.sumEntradasByProdutoId(1L)).thenReturn(15, 15);
-        when(movimentacaoRepository.sumSaidasByProdutoId(1L)).thenReturn(0, 10); // Depois de salvar a saída será 10. Novo saldo = 5
+        when(movimentacaoRepository.sumSaidasByProdutoId(1L)).thenReturn(0, 10); // Saldo final 5
 
         MovimentacaoRequestDTO request = MovimentacaoRequestDTO.builder()
                 .produtoId(1L)
@@ -110,13 +110,13 @@ class EstoqueServiceTest {
 
         when(movimentacaoRepository.save(any())).thenReturn(salva);
 
-        // Act
+        // Executa
         MovimentacaoResponseDTO response = estoqueService.registrarMovimentacao(request);
 
-        // Assert
+        // Valida
         assertThat(response.getId()).isEqualTo(100L);
         verify(movimentacaoRepository).save(any());
-        // Deve ter publicado evento, pois o saldo novo (5) < 10
+        // Publica evento
         verify(eventPublisher).publicarEstoqueBaixo(any(EstoqueBaixoEventDTO.class));
     }
 }

@@ -29,7 +29,7 @@ class EstoqueEventConsumerTest {
     @Test
     @DisplayName("consumirEventoEstoqueBaixo() deve salvar um alerta no banco")
     void consumirEvento_deveSalvarAlerta() {
-        // Arrange
+        // Prepara
         EstoqueEventConsumer consumer = new EstoqueEventConsumer(alertaService);
         EstoqueBaixoEventDTO evento = EstoqueBaixoEventDTO.builder()
                 .produtoId(1L)
@@ -37,10 +37,10 @@ class EstoqueEventConsumerTest {
                 .dataHoraOcorrencia(LocalDateTime.now())
                 .build();
 
-        // Act
+        // Executa
         consumer.consumirEventoEstoqueBaixo(evento);
 
-        // Assert
+        // Valida
         verify(alertaRepository).save(any(Alerta.class));
     }
 }
