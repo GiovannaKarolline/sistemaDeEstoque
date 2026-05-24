@@ -1,39 +1,43 @@
-# Produto Service
+Documentação do Microsserviço Produto Service
 
-## 1. Descrição Funcional
-- **Nome do microsserviço:** Produto Service
-- **Objetivo e responsabilidades principais:** O serviço atua como o catálogo central de itens do sistema. Sua responsabilidade principal é fornecer operações CRUD para a gestão de produtos, garantindo as regras de negócio associadas aos cadastros. Além disso, ele atua ativamente enriquecendo os dados retornados ao usuário, consultando a cotação do dólar em tempo real para apresentar os preços em moedas internacionais (USD).
+1. Descrição Funcional
+Nome do microsserviço: Produto Service
+Objetivo e responsabilidades principais: O Produto Service tem o objetivo de gerenciar o catálogo de produtos do sistema de estoque. Sua responsabilidade principal é manter o cadastro dos itens atualizado e ser a fonte oficial de informações. Além disso, ele é responsável por apresentar o preço internacional dos produtos, convertendo o valor original de Reais para Dólares através de uma integração em tempo real com uma API de câmbio.
 
-## 2. Endpoints da API
-Abaixo estão os endpoints expostos, documentados internamente via OpenAPI/Swagger:
+2. Endpoints da API
 
-- **`GET /produtos`**
-  - **Descrição:** Lista de forma paginada/simplificada todos os produtos cadastrados no sistema. (Por otimização de performance, não aplica a conversão cambial na listagem global).
-- **`GET /produtos/{id}`**
-  - **Descrição:** Busca e retorna os dados detalhados de um produto específico pelo seu ID. Internamente, realiza a requisição à API de câmbio para incluir o valor convertido para Dólar (USD).
-- **`POST /produtos`**
-  - **Descrição:** Cria um novo produto no banco de dados. Exige validação de campos obrigatórios e unicidade do SKU.
-- **`PUT /produtos/{id}`**
-  - **Descrição:** Atualiza as informações (como nome, descrição e preço BRL) de um produto existente.
-- **`DELETE /produtos/{id}`**
-  - **Descrição:** Remove um produto fisicamente do catálogo de estoque.
+Método HTTP: GET
+URL: /produtos
+Descrição da operação: Retorna a lista de todos os produtos cadastrados no banco de dados, contendo informações básicas e sem realizar a conversão de moedas, a fim de garantir maior velocidade na resposta.
 
-## 3. Exemplo de Requisição e Resposta
+Método HTTP: GET
+URL: /produtos/{id}
+Descrição da operação: Retorna os dados completos de um único produto, buscando através do seu identificador numérico. Nesta operação, o serviço acessa a API externa para calcular e incluir o valor atual do produto em Dólares na resposta.
 
-**Exemplo de criação de produto (`POST /produtos`):**
+Método HTTP: POST
+URL: /produtos
+Descrição da operação: Recebe os dados de um novo produto e o cadastra no sistema, validando se todas as informações estão corretas e garantindo que o código de estoque (SKU) não está duplicado.
 
-*Requisição (JSON):*
-```json
+Método HTTP: PUT
+URL: /produtos/{id}
+Descrição da operação: Atualiza as informações (como nome, descrição e preço) de um produto que já existe no sistema.
+
+Método HTTP: DELETE
+URL: /produtos/{id}
+Descrição da operação: Exclui permanentemente o cadastro de um produto específico do banco de dados.
+
+3. Exemplo de Requisição e Resposta
+Abaixo está o exemplo de como funciona a criação de um novo produto através do endpoint POST /produtos.
+
+Exemplo em JSON de entrada (Requisição):
 {
   "nome": "Notebook Gamer",
   "descricao": "Notebook para jogos de alta performance",
   "sku": "NOT-001",
   "precoBrl": 5250.00
 }
-```
 
-*Resposta (`201 Created`):*
-```json
+Exemplo em JSON de saída (Resposta):
 {
   "id": 2,
   "nome": "Notebook Gamer",
@@ -45,45 +49,35 @@ Abaixo estão os endpoints expostos, documentados internamente via OpenAPI/Swagg
   "criadoEm": "2026-05-23T22:43:02",
   "atualizadoEm": "2026-05-23T22:43:02"
 }
-```
 
-## 4. Dependências Externas
-- **Outros microsserviços consumidos:** Nenhum (o Produto Service atua na base da arquitetura e é consumido por outros, como o Estoque Service).
-- **Banco de dados:** Banco de dados relacional (H2 in-memory) embarcado, manipulado via Spring Data JPA.
-- **Fila ou broker de mensagens:** N/A para este serviço.
-- **APIs externas:** Consome a `AwesomeAPI` (`economia.awesomeapi.com.br`) sem necessidade de autenticação para resgatar a última cotação do par USD-BRL.
+4. Dependências Externas
+Outros microsserviços consumidos: Este serviço atua na base da arquitetura e não consome nenhum outro microsserviço interno.
+Banco de dados: Utiliza o banco de dados relacional H2, rodando em memória e gerenciado pelo framework Spring Data JPA.
+Fila ou broker de mensagens: Não se aplica. O Produto Service não utiliza filas ou mensageria em sua arquitetura atual.
+APIs externas: Consome a API pública AwesomeAPI (economia.awesomeapi.com.br) para consultar a taxa de câmbio mais recente e converter o preço de BRL para USD.
 
-## 5. Responsável pelo Serviço
-- **Equipe:** Squad de Catálogo / Inventário.
-- **Responsável:** Desenvolvedor alocado / Giovanna Karolline (Owner do Repositório).
+5. Responsável pelo Serviço
+Equipe ou pessoa responsável: Desenvolvido e mantido por Giovanna Karolline.
 
-## 6. Procedimentos Básicos de Operação
-- **Como executar localmente:** No diretório do serviço, utilize o wrapper do Maven ou uma instalação local: 
-  ```bash
-  mvn spring-boot:run
-  ```
-  O serviço irá subir na porta configurada (default: 8081).
-- **Como verificar logs:** Os logs da aplicação são impressos diretamente na saída padrão (console/stdout) através do SLF4J + Logback configurados pelo Spring Boot.
-- **Endpoint de health check:** Por meio do Spring Boot Actuator, pode-se verificar a saúde em `http://localhost:8081/actuator/health`.
-- **Documentação Interativa:** Acesse o Swagger UI em `http://localhost:8081/swagger-ui.html`.
-- **Como reiniciar o serviço:** Como roda embutido (Tomcat), basta encerrar o processo atrelado no terminal (ex: `CTRL + C`) e executar o comando de start novamente.
+6. Procedimentos Básicos de Operação
+Como executar localmente: Abra o terminal, navegue até a pasta do produto-service e digite o comando "mvn spring-boot:run". O serviço ficará disponível na porta 8081.
+Como verificar logs: Todos os registros e erros do serviço são impressos diretamente na tela do próprio terminal onde a aplicação foi iniciada.
+Endpoint de health check: Para checar se a aplicação está de pé e saudável, acesse a URL /actuator/health no seu navegador.
+Como reiniciar o serviço: No terminal em que a aplicação estiver rodando, pressione as teclas Ctrl e C simultaneamente para parar a execução. Após o encerramento ser concluído, digite novamente o comando de inicialização local.
 
-## 7. Regras de Negócio
-- **Unicidade de SKU:** Não é permitido o cadastro de dois produtos com o mesmo código `sku` (Stock Keeping Unit). O sistema deve retornar um erro HTTP 400 em caso de duplicidade.
-- **Conversão de Câmbio em Tempo Real:** O preço é armazenado em Reais (BRL). Ao consultar o detalhe de um produto, o serviço consome a cotação do Dólar para computar o valor estimado.
-- **Resiliência e Fallback (Circuit Breaker):** Caso a AwesomeAPI esteja inoperante ou apresentando instabilidades graves, o Circuit Breaker (Resilience4j) é ativado. Quando aberto, uma função de *fallback* é disparada preenchendo o `precoUsd` como `null`, impedindo que o `produto-service` caia devido a falhas em cascata, mantendo os endpoints vitais no ar.
+7. Regras de Negócio
+Principais validações e comportamentos do serviço:
+O sistema valida automaticamente se os dados enviados para criação estão preenchidos corretamente, bloqueando o cadastro de itens com preço negativo ou com campos obrigatórios vazios.
+O código identificador do produto, chamado de SKU, deve ser exclusivo. O sistema impede o cadastro de dois itens diferentes compartilhando o mesmo código.
+O serviço possui uma regra de proteção (conhecida como Circuit Breaker) na integração com a API de câmbio externa. Se a AwesomeAPI sair do ar, o serviço de produtos não trava. Ele continua operando normalmente, mas passa a retornar o preço em dólar como nulo de forma controlada.
 
-## 8. Eventos Publicados ou Consumidos (se aplicável)
-- *Não aplicável a este microsserviço no momento.* Toda a comunicação dele é puramente síncrona via requisições REST/HTTP.
+8. Eventos Publicados ou Consumidos
+Nome e descrição dos eventos: O Produto Service não faz publicação nem consumo de eventos de mensageria. A sua comunicação ocorre integralmente através de chamadas síncronas HTTP.
 
-## 9. Métricas Monitoradas
-Através da integração com o Spring Boot Actuator (`/actuator/metrics`), as seguintes métricas técnicas e de resiliência são relevantes e observáveis:
-- `http.server.requests`: Quantidade e tempo de resposta geral (latência) dos endpoints REST.
-- `resilience4j.circuitbreaker.state`: Estado atual do circuito em relação à AwesomeAPI (CLOSED, OPEN, HALF_OPEN) para monitorar instabilidades em integrações externas.
-- `hikaricp.connections`: Utilização do pool de conexões com o banco de dados.
+9. Métricas Monitoradas
+Exemplos de indicadores relevantes:
+Quantidade e tempo médio de resposta das chamadas recebidas pelos endpoints da API, o que ajuda a identificar problemas de lentidão.
+Monitoramento do estado de comunicação com a API de câmbio externa, permitindo saber se a conexão com o fornecedor terceirizado está falhando com frequência.
 
-## 10. ADR Relacionado (Decisão Arquitetural)
-- **ADR-001: Isolamento de Base de Dados por Microsserviço:**
-  *Decisão:* O `produto-service` é o guardião único dos dados de produto. Ele possui seu próprio banco de dados, não compartilhando tabelas com o `estoque-service` ou outros. Outros serviços que precisarem dos dados de produto devem necessariamente realizar chamadas de rede API REST para ele.
-- **ADR-002: Smart Endpoints, Dumb Pipes:**
-  *Decisão:* Toda a inteligência e orquestração de resiliência residem no próprio microsserviço (via Resilience4j), sem depender de um Enterprise Service Bus (ESB) complexo na rede para tratamento de falhas HTTP.
+10. ADR Relacionado
+Decisão arquitetural associada ao serviço: O Produto Service foi isolado com sua própria estrutura de banco de dados, de forma independente do Estoque Service. Essa decisão foi documentada para garantir que qualquer necessidade de consultar os dados de produtos precise ocorrer exclusivamente via rede, garantindo que o banco de dados não seja compartilhado indevidamente entre diferentes microsserviços.
