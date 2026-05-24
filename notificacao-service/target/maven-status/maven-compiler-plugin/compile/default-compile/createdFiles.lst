@@ -1,0 +1,10 @@
+br\edu\inventory\notificacao\config\NotificacaoConfig.class
+br\edu\inventory\notificacao\service\AlertaService.class
+br\edu\inventory\notificacao\dto\EstoqueBaixoEventDTO$EstoqueBaixoEventDTOBuilder.class
+br\edu\inventory\notificacao\model\Alerta$AlertaBuilder.class
+br\edu\inventory\notificacao\dto\EstoqueBaixoEventDTO.class
+br\edu\inventory\notificacao\model\Alerta.class
+br\edu\inventory\notificacao\messaging\EstoqueEventConsumer.class
+br\edu\inventory\notificacao\controller\AlertaController.class
+br\edu\inventory\notificacao\repository\AlertaRepository.class
+br\edu\inventory\notificacao\NotificacaoApplication.class

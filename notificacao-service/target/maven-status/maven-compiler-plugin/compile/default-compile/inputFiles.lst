@@ -1,0 +1,8 @@
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\config\NotificacaoConfig.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\controller\AlertaController.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\dto\EstoqueBaixoEventDTO.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\messaging\EstoqueEventConsumer.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\model\Alerta.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\NotificacaoApplication.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\repository\AlertaRepository.java
+C:\Users\Aluno\Documents\sistemaDeEstoque\notificacao-service\src\main\java\br\edu\inventory\notificacao\service\AlertaService.java

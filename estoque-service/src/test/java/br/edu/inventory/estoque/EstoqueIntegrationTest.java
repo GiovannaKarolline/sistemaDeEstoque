@@ -98,6 +98,6 @@ class EstoqueIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.mensagem").value("Produto não encontrado no Produto Service"));
+                .andExpect(jsonPath("$.mensagem").value("Produto com ID 99 não existe no Produto Service"));
     }
 }
