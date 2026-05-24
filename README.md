@@ -1,4 +1,4 @@
-**Documentação do Microsserviço Produto Service**
+**Documentação do Microsserviço Produto-Service**
 1. Descrição Funcional
 Nome do microsserviço: Produto Service
 Objetivo e responsabilidades principais: O Produto Service tem o objetivo de gerenciar o catálogo de produtos do sistema de estoque. Sua responsabilidade principal é manter o cadastro dos itens atualizado e ser a fonte oficial de informações. Além disso, ele é responsável por apresentar o preço internacional dos produtos, convertendo o valor original de Reais para Dólares através de uma integração em tempo real com uma API de câmbio.
